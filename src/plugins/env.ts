@@ -12,6 +12,12 @@ const schema = {
       default: 3000,
       description: "The port to run the server on",
     },
+    NODE_ENV: {
+      type: "string",
+      enum: ["development", "production"],
+      default: "development",
+      description: "The environment the server is running in",
+    },
   },
 } as const satisfies JSONSchema;
 

@@ -13,9 +13,13 @@ const onError = (err: Error | null): void => {
 const onReady = (err: Error | null): void => {
   onError(err);
 
-  const port = app.getEnvs<Envs>().PORT;
+  const env = app.getEnvs<Envs>();
 
-  app.listen({ port }, onError);
+  if (env.NODE_ENV === "development") {
+    console.info(app.printRoutes());
+  }
+
+  app.listen({ port: env.PORT }, onError);
 };
 
 (async () => {

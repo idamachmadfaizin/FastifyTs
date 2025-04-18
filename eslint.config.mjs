@@ -5,7 +5,7 @@ import ts from "typescript-eslint";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
-  globalIgnores([".husky/*"]),
+  globalIgnores([".husky/*", "dist/*"]),
   { languageOptions: { globals: globals.node } },
   js.configs.recommended,
   ...ts.configs.recommended,
