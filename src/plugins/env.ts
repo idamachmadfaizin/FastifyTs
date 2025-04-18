@@ -1,5 +1,7 @@
 import { FastifyEnvOptions } from "@fastify/env";
+import { FastifyInstance } from "fastify";
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
+import fp from "fastify-plugin";
 
 const schema = {
   type: "object",
@@ -15,15 +17,13 @@ const schema = {
 
 export type Envs = FromSchema<typeof schema>;
 
-declare module "fastify" {
-  interface FastifyInstance {
-    config: Envs;
-  }
-}
-
-export const envOptions: FastifyEnvOptions = {
+const envOptions: FastifyEnvOptions = {
   schema: schema,
   dotenv: {
     path: `${__dirname}/../../.env`,
   },
 };
+
+export default fp(async (app: FastifyInstance) => {
+  await app.register(import("@fastify/env"), envOptions);
+});
