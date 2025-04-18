@@ -15,15 +15,15 @@ const schema = {
   },
 } as const satisfies JSONSchema;
 
-export type Envs = FromSchema<typeof schema>;
-
-const envOptions: FastifyEnvOptions = {
+const options: FastifyEnvOptions = {
   schema: schema,
   dotenv: {
     path: `${__dirname}/../../.env`,
   },
 };
 
+export type Envs = FromSchema<typeof schema>;
+
 export default fp(async (app: FastifyInstance) => {
-  await app.register(import("@fastify/env"), envOptions);
+  await app.register(import("@fastify/env"), options);
 });
