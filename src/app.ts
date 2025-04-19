@@ -1,9 +1,9 @@
 import fastify from "fastify";
 import {
+  type FastifyZodOpenApiTypeProvider,
   serializerCompiler,
   validatorCompiler,
-  ZodTypeProvider,
-} from "fastify-type-provider-zod";
+} from "fastify-zod-openapi";
 
 const app = fastify({
   logger: {
@@ -14,7 +14,7 @@ const app = fastify({
 })
   .setValidatorCompiler(validatorCompiler)
   .setSerializerCompiler(serializerCompiler)
-  .withTypeProvider<ZodTypeProvider>();
+  .withTypeProvider<FastifyZodOpenApiTypeProvider>();
 
 export type App = typeof app;
 

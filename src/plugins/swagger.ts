@@ -1,7 +1,11 @@
 import { SwaggerOptions } from "@fastify/swagger";
 import { FastifySwaggerUiOptions } from "@fastify/swagger-ui";
 import fp from "fastify-plugin";
-import { jsonSchemaTransform } from "fastify-type-provider-zod";
+import {
+  fastifyZodOpenApiPlugin,
+  fastifyZodOpenApiTransform,
+  fastifyZodOpenApiTransformObject,
+} from "fastify-zod-openapi";
 import { App } from "../app";
 
 const options: SwaggerOptions = {
@@ -12,7 +16,8 @@ const options: SwaggerOptions = {
       version: "1.0.0",
     },
   },
-  transform: jsonSchemaTransform,
+  transform: fastifyZodOpenApiTransform,
+  transformObject: fastifyZodOpenApiTransformObject,
 };
 
 const optionsUi: FastifySwaggerUiOptions = {
@@ -21,6 +26,7 @@ const optionsUi: FastifySwaggerUiOptions = {
 };
 
 export default fp(async (app: App) => {
+  await app.register(fastifyZodOpenApiPlugin);
   await app.register(import("@fastify/swagger"), options);
   await app.register(import("@fastify/swagger-ui"), optionsUi);
 });
