@@ -1,12 +1,12 @@
 import { FastifyStaticOptions } from "@fastify/static";
-import { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
+import { App } from "../app";
 
 const options: FastifyStaticOptions = {
   root: `${__dirname}/../public`,
   prefix: "/public/", // optional: default '/'
 };
 
-export default fp(async (app: FastifyInstance) => {
+export default fp(async (app: App) => {
   await app.register(import("@fastify/static"), options);
 });

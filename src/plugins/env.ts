@@ -1,7 +1,7 @@
 import { FastifyEnvOptions } from "@fastify/env";
-import { FastifyInstance } from "fastify";
-import type { FromSchema, JSONSchema } from "json-schema-to-ts";
 import fp from "fastify-plugin";
+import type { FromSchema, JSONSchema } from "json-schema-to-ts";
+import { App } from "../app";
 
 const schema = {
   type: "object",
@@ -30,6 +30,6 @@ const options: FastifyEnvOptions = {
 
 export type Envs = FromSchema<typeof schema>;
 
-export default fp(async (app: FastifyInstance) => {
+export default fp(async (app: App) => {
   await app.register(import("@fastify/env"), options);
 });
