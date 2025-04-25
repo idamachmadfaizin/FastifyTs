@@ -1,10 +1,7 @@
-import { RequestValidationError } from "fastify-zod-openapi";
-import fs from "fs";
-import { pipeline } from "stream";
-import util from "util";
 import { z } from "zod";
 import "zod-openapi/extend";
 import { App } from "../../../app";
+import { MultipartFileValue } from "../../../plugins/multipart";
 
 export default async function (app: App) {
   app.route({
@@ -16,7 +13,8 @@ export default async function (app: App) {
       body: z.object({
         name: z.string().trim().min(1),
         age: z.preprocess((val) => Number(val), z.number()).optional(), //When using Fastify's multipart form handling, all form fields (including numbers) are received as strings by default
-        picture: z.any().openapi({
+        picture: z.instanceof(MultipartFileValue).openapi({
+          type: "string",
           format: "binary",
         }),
       }),

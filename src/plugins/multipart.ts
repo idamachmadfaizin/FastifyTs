@@ -1,23 +1,33 @@
-import os from "os";
+import { MultipartFile } from "@fastify/multipart";
 import fp from "fastify-plugin";
 import fs from "fs";
-import { pipeline } from "node:stream/promises";
-import { App } from "../app";
-import { MultipartFile } from "@fastify/multipart";
 import path from "node:path";
+import { pipeline } from "node:stream/promises";
+import os from "os";
+import { App } from "../app";
 import { Envs } from "./env";
-export type MultipartFileValue = {
-  directory: string;
-  filename: string;
-  encoding: string;
-  mimetype: string;
+import { ulid } from "ulid";
+
+export class MultipartFileValue {
+  constructor(
+    public directory: string,
+    public filename: string,
+    public encoding: string,
+    public mimetype: string,
+  ) {}
+}
+
+export type MultiPartFile<T> = MultipartFile & { value: T };
+
+const sanitizeFilename = (filename: string, maxLength = 50) => {
+  return filename
+    .replace(/[^a-zA-Z0-9\-._]/g, "")
+    .toLowerCase()
+    .substring(0, maxLength);
 };
 
-export type MyMultiPartFile = MultipartFile & { value: MultipartFileValue };
-
-const generateRandomCode = () => Math.random().toString(36).substring(2, 15);
 const createFileName = (filename: string) =>
-  `${Date.now()}-${generateRandomCode()}-${filename}`;
+  `${ulid()}-${sanitizeFilename(filename)}`;
 
 const isFsError = (error: unknown): error is NodeJS.ErrnoException => {
   return (error as NodeJS.ErrnoException).code !== undefined;
@@ -40,7 +50,8 @@ const ensureDirectoryExists = async (dirPath: string, app: App) => {
 export default fp(async (app: App) => {
   await app.register(import("@fastify/multipart"), {
     attachFieldsToBody: "keyValues",
-    onFile: async (part) => {
+    onFile: async (part: any) => {
+      console.log("onFile", part.value);
       part.filename = createFileName(part.filename);
       const tmpdir = path.resolve(os.tmpdir(), app.getEnvs<Envs>().APP_NAME);
       // await ensureDirectoryExists(tmpdir, app);
@@ -50,13 +61,15 @@ export default fp(async (app: App) => {
         part.file,
         fs.createWriteStream(path.resolve(tmpdir, part.filename)),
       );
+      console.log("onFile", part.value);
 
-      (part as MyMultiPartFile).value = {
-        directory: tmpdir,
-        filename: part.filename,
-        encoding: part.encoding,
-        mimetype: part.mimetype,
-      };
+      (part as MultiPartFile<MultipartFileValue>).value =
+        new MultipartFileValue(
+          tmpdir,
+          part.filename,
+          part.encoding,
+          part.mimetype,
+        );
     },
   });
 });
