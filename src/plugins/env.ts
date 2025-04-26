@@ -5,17 +5,20 @@ import { App } from "../app";
 
 const schema = {
   type: "object",
-  required: [],
+  required: ["APP_NAME"],
   properties: {
+    APP_NAME: {
+      type: "string",
+    },
     PORT: {
-      type: "number",
+      type: "integer",
       default: 3000,
       description: "The port to run the server on",
     },
     NODE_ENV: {
       type: "string",
       enum: ["development", "production"],
-      default: "development",
+      default: "production",
       description: "The environment the server is running in",
     },
   },
