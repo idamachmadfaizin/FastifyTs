@@ -1,5 +1,5 @@
-import { z } from "zod";
 import { App } from "../app";
+import { z } from "../plugins/zod";
 
 export default async function (app: App) {
   app.route({
