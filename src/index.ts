@@ -15,9 +15,9 @@ const onReady = (err: Error | null): void => {
 
   const env = app.getEnvs<Envs>();
 
-  if (env.NODE_ENV === "development") {
-    console.info(app.printRoutes());
-  }
+  // if (env.NODE_ENV === "development") {
+  //   console.info(app.printRoutes());
+  // }
 
   app.listen({ port: env.PORT }, onError);
 };
