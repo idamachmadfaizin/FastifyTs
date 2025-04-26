@@ -3,7 +3,7 @@ import fp from "fastify-plugin";
 import { App } from "../app";
 
 const options: FastifyStaticOptions = {
-  root: `${__dirname}/../public`,
+  root: `${__dirname}/../storage/public`,
   prefix: "/public/", // optional: default '/'
 };
 
