@@ -7,7 +7,7 @@ import os from "os";
 import { App } from "../app";
 import { Envs } from "./env";
 import { ulid } from "ulid";
-import { ensureDirExists } from "../utils/directory";
+import { ensureDirExistsAsync } from "../utils/directory";
 
 export class MultipartFileValue {
   constructor(
@@ -36,7 +36,7 @@ export default fp(async (app: App) => {
     onFile: async (part) => {
       const tmpdir = path.resolve(os.tmpdir(), app.getEnvs<Envs>().APP_NAME);
       part.filename = createFileName(part.filename);
-      await ensureDirExists(tmpdir);
+      await ensureDirExistsAsync(tmpdir);
       await pipeline(
         part.file,
         fs.createWriteStream(path.resolve(tmpdir, part.filename)),

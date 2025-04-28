@@ -4,7 +4,23 @@ import path from "node:path";
 import os from "os";
 import { isNodeError } from "./error";
 
-export const ensureDirExists = async (dirPath: string) => {
+export const ensureDirExists = (dirPath: string) => {
+  try {
+    fs.accessSync(dirPath);
+  } catch (error: unknown) {
+    if (isNodeError(error) && error.code === "ENOENT") {
+      fs.mkdirSync(dirPath, { recursive: true });
+
+      const message = `Directory created: ${dirPath}`;
+      if (app) app.log.info(message);
+      else console.log(message);
+    } else {
+      throw error;
+    }
+  }
+};
+
+export const ensureDirExistsAsync = async (dirPath: string) => {
   try {
     await fs.promises.access(dirPath);
   } catch (error: unknown) {
