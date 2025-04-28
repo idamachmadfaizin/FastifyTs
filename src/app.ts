@@ -4,13 +4,10 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from "fastify-zod-openapi";
+import envLogger from "./constants/envLogger";
 
 const app = fastify({
-  logger: {
-    transport: {
-      target: "@fastify/one-line-logger",
-    },
-  },
+  logger: envLogger[process.env.NODE_ENV || "development"],
 })
   .setValidatorCompiler(validatorCompiler)
   .setSerializerCompiler(serializerCompiler)
