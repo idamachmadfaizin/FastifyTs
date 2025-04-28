@@ -7,6 +7,7 @@ import os from "os";
 import { App } from "../app";
 import { Envs } from "./env";
 import { ulid } from "ulid";
+import { ensureDirExists } from "../utils/directory";
 
 export class MultipartFileValue {
   constructor(
@@ -29,31 +30,13 @@ const sanitizeFilename = (filename: string, maxLength = 50) => {
 const createFileName = (filename: string) =>
   `${ulid()}-${sanitizeFilename(filename)}`;
 
-const isFsError = (error: unknown): error is NodeJS.ErrnoException => {
-  return (error as NodeJS.ErrnoException).code !== undefined;
-};
-
-const ensureDirectoryExists = async (dirPath: string, app: App) => {
-  try {
-    await fs.promises.access(dirPath);
-  } catch (error: unknown) {
-    app.log.error(error);
-    if (isFsError(error) && error.code === "ENOENT") {
-      await fs.promises.mkdir(dirPath, { recursive: true });
-      app.log.info(`Directory created: ${dirPath}`);
-    } else {
-      throw error;
-    }
-  }
-};
-
 export default fp(async (app: App) => {
   await app.register(import("@fastify/multipart"), {
     attachFieldsToBody: "keyValues",
-    onFile: async (part: any) => {
+    onFile: async (part) => {
       const tmpdir = path.resolve(os.tmpdir(), app.getEnvs<Envs>().APP_NAME);
       part.filename = createFileName(part.filename);
-      await ensureDirectoryExists(tmpdir, app);
+      await ensureDirExists(tmpdir);
       await pipeline(
         part.file,
         fs.createWriteStream(path.resolve(tmpdir, part.filename)),
