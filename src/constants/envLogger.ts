@@ -3,7 +3,9 @@ import path from "node:path";
 import { ensureDirExists } from "../utils/directory";
 
 const basePath = path.resolve(`${__dirname}/../../`, "logs");
-ensureDirExists(basePath);
+if (process.env.NODE_ENV === "production") {
+  ensureDirExists(basePath);
+}
 
 const envLogger: Record<string, FastifyServerOptions["logger"]> = {
   development: {
@@ -11,6 +13,10 @@ const envLogger: Record<string, FastifyServerOptions["logger"]> = {
       target: "pino-pretty",
       options: {
         colorize: true,
+        ignore: "hostname",
+        hideObject: true,
+        messageFormat:
+          "{if req}{req.method} {req.url} - {end}{if res}{res.statusCode} {responseTime} ms - {end}{msg}",
       },
     },
   },
