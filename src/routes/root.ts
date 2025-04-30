@@ -8,12 +8,20 @@ export default async function (app: App) {
     schema: {
       response: {
         200: z.object({
-          hello: z.string(),
+          message: z.string(),
         }),
       },
     },
-    handler: async function (_, reply) {
-      reply.send({ hello: "world" });
+    handler: async function (request, reply) {
+      const result = {
+        message: "Hello world",
+      };
+
+      if (request.type("text/html")) {
+        return reply.view("index", result);
+      }
+
+      reply.send(result);
     },
   });
 }
