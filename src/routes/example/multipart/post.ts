@@ -1,6 +1,6 @@
 import { App } from "../../../app";
 import { MultipartFileValue } from "../../../plugins/multipart";
-import { z } from "../../../plugins/zod";
+import { z } from "../../../constants/zod";
 
 export default async function (app: App) {
   app.route({
