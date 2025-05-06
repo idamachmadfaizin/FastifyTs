@@ -2,6 +2,7 @@ import { FastifyEnvOptions } from "@fastify/env";
 import fp from "fastify-plugin";
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
 import { App } from "../app";
+import path from "path";
 
 const schema = {
   type: "object",
@@ -27,7 +28,7 @@ const schema = {
 const options: FastifyEnvOptions = {
   schema: schema,
   dotenv: {
-    path: `${__dirname}/../../.env`,
+    path: path.join(__dirname, "..", "..", ".env"),
   },
 };
 
