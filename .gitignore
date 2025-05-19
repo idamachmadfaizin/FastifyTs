@@ -87,3 +87,6 @@ sequelize/dist/
 
 # Output
 dist/
+
+# Prisma
+prisma/dev.db
