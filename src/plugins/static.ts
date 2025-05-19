@@ -1,9 +1,10 @@
 import { FastifyStaticOptions } from "@fastify/static";
 import fp from "fastify-plugin";
+import path from "path";
 import { App } from "../app";
 
 const options: FastifyStaticOptions = {
-  root: `${__dirname}/../storage/public`,
+  root: path.join(__dirname, "..", "storage", "public"),
   prefix: "/public/", // optional: default '/'
 };
 

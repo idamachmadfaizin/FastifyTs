@@ -2,7 +2,7 @@ import { FastifyServerOptions } from "fastify";
 import path from "node:path";
 import { ensureDirExists } from "../utils/directory";
 
-const basePath = path.resolve(`${__dirname}/../../`, "logs");
+const basePath = path.join(__dirname, "..", "..", "logs");
 if (process.env.NODE_ENV === "production") {
   ensureDirExists(basePath);
 }
@@ -27,7 +27,7 @@ const envLogger: Record<string, FastifyServerOptions["logger"]> = {
           level: "info",
           target: "pino/file",
           options: {
-            destination: path.resolve(
+            destination: path.join(
               basePath,
               `log${new Date().toISOString().split("T")[0]}.log`,
             ),
@@ -37,7 +37,7 @@ const envLogger: Record<string, FastifyServerOptions["logger"]> = {
           level: "error",
           target: "pino/file",
           options: {
-            destination: path.resolve(
+            destination: path.join(
               basePath,
               `err${new Date().toISOString().split("T")[0]}.log`,
             ),
