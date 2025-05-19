@@ -1,7 +1,7 @@
 import { FastifyViewOptions } from "@fastify/view";
 import fp from "fastify-plugin";
-import { App } from "../app";
 import path from "node:path";
+import { App } from "../app";
 import { ensureDirExistsAsync } from "../utils/directory";
 
 const root = path.join(__dirname, "..", "views");

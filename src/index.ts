@@ -1,8 +1,8 @@
 import autoload from "@fastify/autoload";
+import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 import path from "node:path";
 import app from "./app";
 import { Envs } from "./plugins/env";
-import { FastifyError, FastifyReply, FastifyRequest } from "fastify";
 
 const globalErrorHandler = (
   error: FastifyError,

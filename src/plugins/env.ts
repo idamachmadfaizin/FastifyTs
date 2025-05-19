@@ -1,8 +1,8 @@
 import { FastifyEnvOptions } from "@fastify/env";
 import fp from "fastify-plugin";
 import type { FromSchema, JSONSchema } from "json-schema-to-ts";
-import { App } from "../app";
 import path from "path";
+import { App } from "../app";
 
 const schema = {
   type: "object",
