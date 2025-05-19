@@ -34,12 +34,13 @@ export default fp(async (app: App) => {
   await app.register(import("@fastify/multipart"), {
     attachFieldsToBody: "keyValues",
     onFile: async (part) => {
-      const tmpdir = path.resolve(os.tmpdir(), app.getEnvs<Envs>().APP_NAME);
+      const tmpdir = path.join(os.tmpdir(), app.getEnvs<Envs>().APP_NAME);
+
       part.filename = createFileName(part.filename);
       await ensureDirExistsAsync(tmpdir);
       await pipeline(
         part.file,
-        fs.createWriteStream(path.resolve(tmpdir, part.filename)),
+        fs.createWriteStream(path.join(tmpdir, part.filename)),
       );
 
       (part as MultiPartFile<MultipartFileValue>).value =
